@@ -1,0 +1,78 @@
+library(tidyverse)
+library(data.table)
+
+process_data <- function(file,year){
+  w <- fread(file)
+  w <- mutate(w,DATA_YEAR=year)
+  w <- select(w,DATA_YEAR,FIPS_CODE=STATE_CODE_001,BRIDGE_ID=STRUCTURE_NUMBER_008, YEAR_BUILT=YEAR_BUILT_027, YEAR_RECONSTRCUTED=YEAR_RECONSTRUCTED_106,
+              AVERAGE_DAILY_TRAFFIC=ADT_029,YEAR_ADT=YEAR_ADT_030,FUTURE_ADT=FUTURE_ADT_114,
+              DECK_COND=DECK_COND_058,SUPERSTRUCTURE_COND=SUPERSTRUCTURE_COND_059,CHANNEL_COND=CHANNEL_COND_061,
+              CULVERT_COND=CULVERT_COND_062,OPERATING_RATING=OPERATING_RATING_064,INVENTORY_RATING=INVENTORY_RATING_066)
+  return (w)
+}
+
+w19 <- process_data("data/bridgeData/WI19.txt",2019)
+w18 <- process_data("data/bridgeData/WI18.txt",2018)
+w17 <- process_data("data/bridgeData/WI17.txt",2017)
+w16 <- process_data("data/bridgeData/WI16.txt",2016)
+w15 <- process_data("data/bridgeData/WI15.txt",2015)
+w14 <- process_data("data/bridgeData/WI14.txt",2014)
+w13 <- process_data("data/bridgeData/WI13.txt",2013)
+w12 <- process_data("data/bridgeData/WI12.txt",2012)
+w11 <- process_data("data/bridgeData/WI11.txt",2011)
+w10 <- process_data("data/bridgeData/WI10.txt",2010)
+w09 <- process_data("data/bridgeData/WI09.txt",2009)
+w08 <- process_data("data/bridgeData/WI08.txt",2008)
+w07 <- process_data("data/bridgeData/WI07.txt",2007)
+w06 <- process_data("data/bridgeData/WI06.txt",2006)
+w05 <- process_data("data/bridgeData/WI05.txt",2005)
+w04 <- process_data("data/bridgeData/WI04.txt",2004)
+w03 <- process_data("data/bridgeData/WI03.txt",2003)
+w02 <- process_data("data/bridgeData/WI02.txt",2002)
+w01 <- process_data("data/bridgeData/WI01.txt",2001)
+w00 <- process_data("data/bridgeData/WI00.txt",2000)
+w99 <- process_data("data/bridgeData/WI99.txt",1999)
+w98 <- process_data("data/bridgeData/WI98.txt",1998)
+w97 <- process_data("data/bridgeData/WI97.txt",1997)
+w96 <- process_data("data/bridgeData/WI96.txt",1996)
+w95 <- process_data("data/bridgeData/WI95.txt",1995)
+w94 <- process_data("data/bridgeData/WI94.txt",1994)
+w93 <- process_data("data/bridgeData/WI93.txt",1993)
+w92 <- process_data("data/bridgeData/WI92.txt",1992)
+
+# to concatenate the data from every year
+w_tot <- rbind(w19,w18,w17,w16,w15,w14,w13,w12,w11,w10,w09,w08,w07,w06,w05,w04,w03,w02,w01,w00,w99,w98,w97,w96,w95,w94,w93,w92)
+b1 <- filter(w_tot,BRIDGE_ID=="00000000000F303"|BRIDGE_ID=="00000000000F304"|BRIDGE_ID=="00000000000F310"|BRIDGE_ID=="00000000000F311"|BRIDGE_ID=="00000000000F315"|BRIDGE_ID=="00000000000F317"|BRIDGE_ID=="00000000000F318")
+
+# to plot a graph to show the trend in the operating and inventory rating of first 5 bridges
+ggplot(b1, aes(x=DATA_YEAR,y=OPERATING_RATING, color=BRIDGE_ID)) +geom_line()
+ggplot(b1, aes(x=DATA_YEAR,y=INVENTORY_RATING, color=BRIDGE_ID)) +geom_line()
+# sum(is.na(w19))
+
+colSums(is.na(w_tot))
+# year_future_adt was removed
+w_tot[is.na(w_tot$OPERATING_RATING),]
+
+w_tot_nona <- na.omit(w_tot)
+colSums(is.na(w_tot_nona))
+
+bridges <- unique(w_tot_nona$BRIDGE_ID)
+
+# to find number of na values in each column
+colSums(is.na(w19))
+colSums(is.na(w18))
+colSums(is.na(w17))
+colSums(is.na(w16))
+
+# to get the bridge id of the bridges with na operating_rating
+w19[is.na(w19$OPERATING_RATING),"BRIDGE_ID"]
+w18[is.na(w18$OPERATING_RATING),"BRIDGE_ID"]
+w17[is.na(w17$OPERATING_RATING),"BRIDGE_ID"]
+w16[is.na(w16$OPERATING_RATING),"BRIDGE_ID"]
+
+'ggplot(data = w19) + 
+  geom_bar(mapping=aes(x=AVERAGE_DAILY_TRAFFIC))'
+'
+ggplot(w19,aes(x=YEAR_BUILT,y=AVERAGE_DAILY_TRAFFIC))+
+  geom_line()
+filter(w19,YEAR_BUILT==1919)

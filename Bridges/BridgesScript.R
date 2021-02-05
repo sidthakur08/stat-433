@@ -1,6 +1,21 @@
 library(tidyverse)
 library(data.table)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 w19 <- fread("bridgeData/WI19.txt")
 w18 <- fread("bridgeData/WI18.txt")
 w17 <- fread("bridgeData/WI17.txt")
@@ -178,8 +193,8 @@ w_tot <- rbind(w19,w18,w17,w16,w15,w14,w13,w12,w11,w10,w09,w08,w07,w06,w05,w04,w
 b1 <- filter(w_tot,BRIDGE_ID=="00000000000F303"|BRIDGE_ID=="00000000000F304"|BRIDGE_ID=="00000000000F310"|BRIDGE_ID=="00000000000F311"|BRIDGE_ID=="00000000000F315"|BRIDGE_ID=="00000000000F317"|BRIDGE_ID=="00000000000F318")
 
 # to plot a graph to show the trend in the operating and inventory rating of first 5 bridges
-ggplot(w_tot, aes(x=DATA_YEAR,y=OPERATING_RATING, color=BRIDGE_ID)) +geom_line()
-ggplot(w_tot, aes(x=DATA_YEAR,y=INVENTORY_RATING, color=BRIDGE_ID)) +geom_line()
+ggplot(b1, aes(x=DATA_YEAR,y=OPERATING_RATING, color=BRIDGE_ID)) +geom_line()
+ggplot(b1, aes(x=DATA_YEAR,y=INVENTORY_RATING, color=BRIDGE_ID)) +geom_line()
 # sum(is.na(w19))
 
 colSums(is.na(w_tot))

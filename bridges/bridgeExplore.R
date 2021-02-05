@@ -42,37 +42,23 @@ w92 <- process_data("data/bridgeData/WI92.txt",1992)
 
 # to concatenate the data from every year
 w_tot <- rbind(w19,w18,w17,w16,w15,w14,w13,w12,w11,w10,w09,w08,w07,w06,w05,w04,w03,w02,w01,w00,w99,w98,w97,w96,w95,w94,w93,w92)
+# sum(is.na(w19))
+
+# to count na for every column
+colSums(is.na(w_tot))
+
+#w_tot[is.na(w_tot$OPERATING_RATING),]
+
+w_tot_nona <- na.omit(w_tot)
+colSums(is.na(w_tot_nona))
+
 b1 <- filter(w_tot,BRIDGE_ID=="00000000000F303"|BRIDGE_ID=="00000000000F304"|BRIDGE_ID=="00000000000F310"|BRIDGE_ID=="00000000000F311"|BRIDGE_ID=="00000000000F315"|BRIDGE_ID=="00000000000F317"|BRIDGE_ID=="00000000000F318")
 
 # to plot a graph to show the trend in the operating and inventory rating of first 5 bridges
 ggplot(b1, aes(x=DATA_YEAR,y=OPERATING_RATING, color=BRIDGE_ID)) +geom_line()
 ggplot(b1, aes(x=DATA_YEAR,y=INVENTORY_RATING, color=BRIDGE_ID)) +geom_line()
-# sum(is.na(w19))
-
-colSums(is.na(w_tot))
-# year_future_adt was removed
-w_tot[is.na(w_tot$OPERATING_RATING),]
-
-w_tot_nona <- na.omit(w_tot)
-colSums(is.na(w_tot_nona))
 
 bridges <- unique(w_tot_nona$BRIDGE_ID)
 
-# to find number of na values in each column
-colSums(is.na(w19))
-colSums(is.na(w18))
-colSums(is.na(w17))
-colSums(is.na(w16))
 
-# to get the bridge id of the bridges with na operating_rating
-w19[is.na(w19$OPERATING_RATING),"BRIDGE_ID"]
-w18[is.na(w18$OPERATING_RATING),"BRIDGE_ID"]
-w17[is.na(w17$OPERATING_RATING),"BRIDGE_ID"]
-w16[is.na(w16$OPERATING_RATING),"BRIDGE_ID"]
 
-'ggplot(data = w19) + 
-  geom_bar(mapping=aes(x=AVERAGE_DAILY_TRAFFIC))'
-'
-ggplot(w19,aes(x=YEAR_BUILT,y=AVERAGE_DAILY_TRAFFIC))+
-  geom_line()
-filter(w19,YEAR_BUILT==1919)

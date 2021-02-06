@@ -26,3 +26,4 @@ for (ul in uls) {
 
 colnames(df) <- c("Name","Designation","Department","Qualification")
 
+write.csv(df,'prof.csv')

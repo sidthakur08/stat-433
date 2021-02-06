@@ -58,7 +58,6 @@ b1 <- filter(w_tot,BRIDGE_ID=="00000000000F303"|BRIDGE_ID=="00000000000F304"|BRI
 ggplot(b1, aes(x=DATA_YEAR,y=OPERATING_RATING, color=BRIDGE_ID)) +geom_line()
 ggplot(b1, aes(x=DATA_YEAR,y=INVENTORY_RATING, color=BRIDGE_ID)) +geom_line()
 
-bridges <- unique(w_tot_nona$BRIDGE_ID)
-
-
+write.csv(w19,'bridges/Wisconsin_Bridges_2019.csv')
+write.csv(w_tot_nona,'bridges/Wisconsin_Bridges.csv')
 

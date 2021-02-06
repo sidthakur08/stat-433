@@ -3,6 +3,8 @@ title: "htmlParseREADME"
 output: html_document
 ---
 
+[Github repo](https://github.com/sidthakur08/stat-433/tree/main/html%20to%20csv)
+
 ```{r}
 library(rvest)
 library(dplyr)

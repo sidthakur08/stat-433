@@ -3,6 +3,8 @@ title: "bridgeREADME"
 output: html_document
 ---
 
+[Github Repo](https://github.com/sidthakur08/stat-433/tree/main/bridges)
+
 ```{r}
 library(tidyverse)
 library(data.table)

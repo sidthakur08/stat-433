@@ -1,0 +1,34 @@
+---
+title: "htmlParseREADME"
+output: html_document
+---
+
+```{r}
+library(rvest)
+library(dplyr)
+library(tidyverse)
+
+file <- read_html("https://guide.wisc.edu/faculty/")
+
+df <- data.frame()
+uls <- file %>% html_nodes(css=".uw-people")
+for (ul in uls) {
+  text <- ul %>% html_nodes(.,"p")
+  text <- gsub('<p>', '', text)
+  text <- gsub('</p>', '', text)
+  for (i in 1:length(text)){
+    if (str_count(text[i],"<br>")<4){
+      text[i] <- paste(gsub('<br>', '|', text[i]),"|")
+    } else {
+      text[i] <- gsub('<br>', '|', text[i])
+    }
+    
+  }
+  
+  vec <- (strsplit(text, "\\|"))
+  temp_df  <-  as.data.frame(matrix(unlist(vec), ncol=length(unlist(vec[1])), nrow=length(vec), byrow = TRUE))
+  df<-rbind(df,temp_df)
+}
+
+colnames(df) <- c("Name","Designation","Department","Qualification")
+```

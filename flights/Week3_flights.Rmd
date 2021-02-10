@@ -1,0 +1,56 @@
+---
+title: "Week2_STAT433"
+output: html_document
+---
+
+#### Recap
+#### 1) How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
+``` {r}
+library(nycflights13)
+library(tidyverse)
+flights
+colSums(is.na(flights))
+```
+
+##### Comments
+
+1. Therefore the missing departure time & delays and arrival time & delays can suggest that the flight was cancelled altogether.  
+2. However there are more number of null values in arrival time compared to departure time which suggests that these flights were either diverted to another airport or cancelled due to some circumstances.  
+3. For the rows of data where the arrival delay is a null value but arrival time has a value present, it is most likely that the flights would have been diverted and it did not reach the original destination.
+
+#### 2) Currently dep_time and sched_dep_time are convenient to look at, but hard to compute with because theyre not really continuous numbers. Convert them to a more convenient representation of number of minutes since midnight.
+
+```{r}
+mutate(flights,
+       dep_time_mins=(flights$dep_time%/%100*60)+flights$dep_time%%100,
+       arr_time_mins=(flights$arr_time%/%100*60)+flights$arr_time%%100)
+```
+
+
+#### 3) Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay? Use multiple dyplr operations, all on one line, concluding with 'ggplot(aes(x= ,y=)) + geom_point()'
+
+##### Comments  
+A flight is cancelled when there is no departure time or arrival time.
+
+```{r}
+flights_freq <- flights %>% 
+  mutate(cancelled = (is.na(flights$dep_delay)|is.na(flights$arr_delay))) %>% # considers for cases 1 and 2
+  group_by(year, month,day) %>% 
+  summarise(cancelled_num = sum(cancelled), flight_num=n()) # calculates the frequency of total flights and cancelled flights per day
+flights_freq
+
+ggplot(flights_freq, aes(x=flight_num, y=cancelled_num)) + 
+  geom_point() + 
+  geom_smooth()
+```
+
+This shows that there is a slight increase in the number of cancelled flights with the total number of flights per day.
+
+```{r}
+delay_freq <- flights %>% group_by(year,month,day,dep_delay) %>% summarise(count=n())
+delay_freq
+
+colSums(is.na(delay_freq))
+delay_freq <- na.omit(delay_freq)
+
+delay_freq

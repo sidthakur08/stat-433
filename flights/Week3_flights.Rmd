@@ -3,7 +3,6 @@ title: "Week2_STAT433"
 output: html_document
 ---
 
-#### Recap
 #### 1) How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
 ``` {r}
 library(nycflights13)

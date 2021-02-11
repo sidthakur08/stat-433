@@ -9,6 +9,10 @@ output: html_document
 library(nycflights13)
 library(tidyverse)
 flights
+```
+
+Looking at the na values of each column.
+``` {r}
 colSums(is.na(flights))
 ```
 
@@ -21,9 +25,10 @@ colSums(is.na(flights))
 #### 2) Currently dep_time and sched_dep_time are convenient to look at, but hard to compute with because theyre not really continuous numbers. Convert them to a more convenient representation of number of minutes since midnight.
 
 ```{r}
-mutate(flights,
+flights <- mutate(flights,
        dep_time_mins=(flights$dep_time%/%100*60)+flights$dep_time%%100,
        arr_time_mins=(flights$arr_time%/%100*60)+flights$arr_time%%100)
+flights
 ```
 
 
@@ -36,21 +41,47 @@ A flight is cancelled when there is no departure time or arrival time.
 flights_freq <- flights %>% 
   mutate(cancelled = (is.na(flights$dep_delay)|is.na(flights$arr_delay))) %>% # considers for cases 1 and 2
   group_by(year, month,day) %>% 
-  summarise(cancelled_num = sum(cancelled), flight_num=n()) # calculates the frequency of total flights and cancelled flights per day
+  summarise(cancelled_num = sum(cancelled)) %>% # calculates the frequency cancelled flights per day
+  ungroup()
+flights_freq <- flights_freq %>% mutate(day_num=(1:nrow(flights_freq)))
 flights_freq
-
-ggplot(flights_freq, aes(x=flight_num, y=cancelled_num)) + 
-  geom_point() + 
-  geom_smooth()
 ```
 
-This shows that there is a slight increase in the number of cancelled flights with the total number of flights per day.
+``` {r}
+ggplot(flights_freq, aes(x=day_num, y=cancelled_num)) + 
+  geom_line() +
+  ggtitle("Number of Flights cancelled per day vs number of days")
+```
+
+#### Comments  
+This shows that there was an irregular jump in the number of cancelled flights during late January and early Feb.
 
 ```{r}
-delay_freq <- flights %>% group_by(year,month,day,dep_delay) %>% summarise(count=n())
-delay_freq
+summary(flights_freq)
+```
+```{r}
+filter(flights_freq,cancelled_num==475)
+```
+#### Comments  
+Interesting find: The spike in the number of the cancelled flights shows that something went down around 8th February 2013. After looking up I found that this was the time when the February 2013th North American blizzard hit the USA.
 
-colSums(is.na(delay_freq))
-delay_freq <- na.omit(delay_freq)
+```{r}
+delay_freq <- flights %>% 
+  mutate(cancelled=(is.na(flights$dep_delay)|is.na(flights$arr_delay))) %>%
+  group_by(year,month,day) %>%
+  summarise(cancelled_num = sum(cancelled), cancelled_mean=mean(cancelled), mean_dep_delay = mean(dep_delay,na.rm=TRUE),mean_arr_delay=mean(arr_delay,na.rm=TRUE)) %>%
+  ungroup()
 
 delay_freq
+```
+
+``` {r}
+ggplot(delay_freq,aes(x=cancelled_num,y=mean_dep_delay)) + 
+  geom_point() +
+  geom_smooth() +
+  ggtitle("Average delay vs Number of Cancelled Flights")
+```
+
+```{r}
+ggplot(delay_freq,aes(x=cancelled_mean,y=mean_dep_delay)) + geom_point() +geom_smooth()
+```

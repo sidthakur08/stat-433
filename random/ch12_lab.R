@@ -72,3 +72,15 @@ preg %>%
 
 preg %>% 
   pivot_longer(c("male","female"), names_to = "gender",values_to = "count", values_drop_na = TRUE)
+
+
+# separate and unite
+table3
+
+table3 %>% 
+  separate(rate,c("cases","population"), sep = '/', convert = TRUE)
+table3 %>% 
+  separate(year, into = c("century", "year"), sep = 2) %>%
+  unite(new,century,year, sep = "")
+
+

@@ -83,4 +83,32 @@ table3 %>%
   separate(year, into = c("century", "year"), sep = 2) %>%
   unite(new,century,year, sep = "")
 
+# missing data
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+stocks
+# only 1 data is explicitly missing
 
+stocks %>% 
+  pivot_wider(names_from=year,values_from = return)
+# one more data is implicitly missing
+
+stocks %>%
+  pivot_wider(names_from = year, values_from=return) %>%
+  pivot_longer(c('2015','2016'),names_to = "year",values_to = "return",values_drop_na = TRUE)
+
+stocks %>%
+  complete(year,qtr)
+
+treatment <- tribble(
+  ~ person,           ~ treatment, ~response,
+  "Derrick Whitmore", 1,           7,
+  NA,                 2,           10,
+  NA,                 3,           9,
+  "Katherine Burke",  1,           4
+)
+treatment %>%
+  fill(person)

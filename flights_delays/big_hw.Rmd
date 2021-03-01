@@ -1,0 +1,130 @@
+---
+title: "Dealing with Departure Delay with Flights Dataset"
+subtitle: "How to manage your flight booking using data analysis."
+output: html_document
+---
+
+Travelling via flights can have mixed feelings. For one, it's a lot faster and safer. For another, it can be a lot more annoying.  
+Sometimes the annoyances begin before you even board the aircraft. When you get the bad news that your flight will be delayed, just be glad you aren't already on board and sitting on the tarmac for a couple of extra hours. But with the power of Data Science and Analysis, we can overcome this... Well somewhat, now we aren't magicians!  
+
+In this reading, We will discuss how to use the nycflights13 dataset to avoid delays in our flights. So when we book our tickets we,  
+1. keep in mind when to book the tickets for,  
+2. take in consideration how late it might get based on weather,  
+3. look for the best airlines and at what airport.   
+
+We include the nycflights13 dataset and tidyverse library to get the features of the major libraries in R. This will definitely come in handy.
+
+``` {r, message=FALSE}
+library(tidyverse)
+library(nycflights13)
+```
+
+#### Time of Flight as a factor
+We can use the scheduled hour of the flight to decide at what hour we can book the flight so as to face minimal delay. We can also focus on the specific time of the flight as a more granular approach if the previous look doesn't satisfy.
+
+In order to get the data we manipulate the flights dataset, group it by hour and then calculate the average delay for the flights.
+
+``` {r}
+time_departure_delay <- flights %>%
+  drop_na() %>%
+  group_by(hour) %>%
+  summarise(mean_dep_delay = mean(dep_delay,na.rm = TRUE))
+
+head(time_departure_delay)
+```
+
+Now that is good for a person who just like numbers and who has some time to look at it. But if we want to get a quick look at the result, there is no better way than a visualization.  
+So here's a plot describing the Average Departure vs the Time of the flight,
+
+``` {r}
+ggplot(time_departure_delay,aes(y=mean_dep_delay,x=hour)) +
+  geom_line() +
+  scale_x_continuous(labels=as.character(time_departure_delay$hour),breaks=time_departure_delay$hour) +
+  labs(x = "Time of Flight",
+       y = "Departure Delay of Flight",
+       title = "Mean Departure Delay of Flights vs Time of Flight",
+       caption = "Data Source: nycflights13")
+```
+
+##### Findings
+We see that the best time to book a flight and face minimal delay is early morning, between 5-9. The time at which we can face maximum delay is during evening, from 16-21. Therefore we can keep in mind that it is better to leave early morning than in evening if we want to avoid delays as much as possible.
+
+
+#### Temperature and Visibility as a factor
+Temperature and Visibility act together to play a big part in flight delays. Using this we can atleast expect what we're in for in terms of flight delays.  
+
+```{r}
+temp_departure_delay <- flights %>%
+  left_join(weather,by=c("origin","time_hour")) %>%
+  group_by(temp) %>%
+  summarise(mean_dep_delay = mean(dep_delay,na.rm = TRUE)) %>%
+  drop_na()
+head(temp_departure_delay)
+
+visib_departure_delay <- flights %>%
+  left_join(weather,by=c("origin","time_hour")) %>%
+  group_by(visib) %>%
+  summarise(mean_dep_delay = mean(dep_delay,na.rm = TRUE)) %>%
+  drop_na()
+head(visib_departure_delay)
+```
+
+We can now look at the plots to get a better understanding and see if we can find something interesting.
+
+```{r}
+ggplot(temp_departure_delay, aes(y=mean_dep_delay,x=temp)) +
+  geom_line() +
+  geom_smooth(method = 'loess',se = FALSE, formula = 'y~x') + 
+  labs(x = "Temperature",
+       y = "Departure Delay of Flight",
+       title = "Mean Departure Delay of Flights vs Temperature at the Airport",
+       caption = "Data Source: nycflights13")
+
+ggplot(visib_departure_delay, aes(y=mean_dep_delay,x=visib)) +
+  geom_line() +
+  geom_smooth(method = 'loess',se = FALSE, formula = 'y~x') + 
+  labs(x = "Visibility",
+       y = "Departure Delay of Flight",
+       title = "Mean Departure Delay of Flights vs Visibility at the Time of Flight",
+       caption = "Data Source: nycflights13")
+```
+
+##### Findings
+From the above plots, we find that at extreme temperatures we can experience delay in our flights and that the delay curve goes down as the visibility improves. 
+
+
+#### Airlines as factor
+We all have our favorite or let's say preferred airlines to travel with. We all are gaining miles with their Elite Business First Class Miles program. However it won't hurt to take a look at what airlines one should prefer when you're travelling from New York.
+
+```{r}
+airline_departure_delay <- flights %>% 
+  left_join(airlines,by="carrier") %>%
+  group_by(origin,name) %>%
+  summarise(mean_dep_delay = mean(dep_delay,na.rm = TRUE))
+```
+
+``` {r warning = FALSE}
+ggplot(airline_departure_delay, mapping = aes(x = name, y=mean_dep_delay, color=origin)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(x = "Airlines",
+       y = "Average Departure Delay of Flight",
+       title = "Mean Departure Delay of Flights vs Airlines",
+       caption = "Data Source: nycflights13")
+```
+
+
+##### Findings
+We see that a lot of airlines face a good amount of departure delay at the LaGuardia Airport(LGA).  
+If we want to check which airline deals with a lot of departure delay so as to avoid it, we can do so by getting the average departure delay for it.
+
+```{r}
+airlines_only <- airline_departure_delay %>%
+  group_by(name) %>%
+  summarise(mean_dep_delay= mean(mean_dep_delay)) %>%
+  arrange(mean_dep_delay)
+airlines_only
+```
+
+##### Findings
+We see that US Airways, Hawaiian Airlines and Alaska Airlines are one of the few airlines who have comparetively less delay, while ExpressJet Airlines and Southwest Airlines are the airlines who face a huge amount of delay in flights. Note that not much can be said about Frontier Airlines, Mesa Airlines or AirTran Airways, as they only take off from LaGuardia and might not be very common in other airports and thus not much of a public choice. However if we're travelling from LaGuardia then it is analytically better to not take these airlines.

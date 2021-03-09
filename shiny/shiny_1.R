@@ -324,7 +324,8 @@ ui <- fluidPage(
     ),
     
     mainPanel(
-      textOutput("selected_var")   # here is the output!
+      textOutput("selected_var"),
+      textOutput("selected_range")# here is the output!
     )
   )
 )
@@ -342,7 +343,11 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   output$selected_var <- renderText({  # notice the render function!
-    "You have selected this"
+    paste("You have selected this",input$var)
+  })
+  
+  output$selected_range <- renderText({
+    paste("You have selected the range ",input$range[1],input$range[2])
   })
   
 }

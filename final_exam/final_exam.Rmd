@@ -1,0 +1,47 @@
+---
+title: "Final Exam"
+author: "Siddhant Thakur"
+output: html_document
+---
+
+A lot of the time spent doing "knowledge work" is time spent being stuck.  As such, one of the most formative parts of projects is the time spent getting stuck. 
+
+In a homework for a typical stat/math/cs course, when you get stuck, there is usually a right answer to find.  Getting stuck in projects is harder because there is not usually a "right answer", but rather "better solutions" and "worse solutions".  This type of uncertainty makes it more real.  
+
+Please keep each answer somewhere around a couple sentences.  Perhaps some might require up to a couple paragraphs, but this is not required. Please keep questions *in italics* and your responses in regular font. 
+
+
+1) *You could be stuck alone or stuck with you group.  Describe a part of your project for which you got "stuck".  *  
+In our project, I got stuck while working on the Cropscape Dataland Layer which was one of the important factors in our project.  
+
+2)  *How did you realize you were stuck?*  
+I realized I was stuck when I had just had a raster file and zero idea on how I was going to extract meaningful data from it.  
+
+3) *What did it feel like to be stuck?  *  
+It wasn't the end of the world but it did kind of suck that I wasn't able to extract anything from it. I remember procrastinating my work after the group meeting for some time.  
+
+4)  *Did your group talk about being stuck?  If so, what did you say to one another?*  
+So when I didn't have the crop data, I focused on presenting the insights or the stuff I did get from the aphids data and mentioned the problem to the group. We discussed and came up with the solution of referring to the, I think, Research Assistant working for a professor in the etomology department.  
+
+5)  *Describe how you got unstuck. *  
+I feel I remember the day clearly. So as I said earlier I kept on delaying my work until the day when I just sat and worked on it (while watching the Reds game, somehow a motivation O.o). I did my research on how to proceed with the CDL data and with the additional help of the RA, I worked it out and we had the crop data.  
+
+6)  *Did you come up with more than one solution to the getting stuck?  Describe them.  If there was more than one, describe how you chose which path to pursue.*  
+So self research and the RA's help were the two solutions I had. I didn't really choose a path to pursue but RA's help was definitely the more effective. As even on the internet there was not much explanation over the use of the functions in the package. With the help of the RA, I was more clear about the use of the package. Though while arranging the data and playing around with the portion of data we wanted, I referred to the internet. So it was technically a mixture of both.
+
+7) *Give your self a pat on the back for getting unstuck!*  
+*proceeds to give myself a pat on the back* Thanks!
+
+## Group dynamics
+One hard thing about groups is that it can be hard to work together as a team.  There is no "correct" way to do this.  
+
+8)  *Describe how your team worked together. *  
+On day one we decided on what everyone will be doing and fortunately everyone did work their part and there was not much problem with any of the members present in the group. There was one person who wasn't really taking the initiative to work on the project. However, as a group, we got behind them and helped them contribute to the project as well.
+
+9)  *If you were a "manager" that was supervising your team, what feedback would you provide?  Reflect on both areas where you performed well and things that you could work on.  *  
+I feel each of the team members did quite enough work on their part. The work isn't definitely equal but I feel that communication also plays a major part in that. Given the current situation it gets a bit difficult to communicate or stay in touch with the other team members. However, it is not impossible. We could've definitely been more communicative with each other and that would've led to some people working more while some people could have relaxed. I believe in equal distribution of work among the team members but after working on this project for STAT433, it did help me realise that it won't always be possible. Though it also made me realise how fun it can be working on a project with a group. :))  
+
+## Misc
+
+10) *If there is anything that you wished I asked about your project and you really want to share it, please put it here.  No response required.*  
+It would've been fun for me to explain how I got the data out of the CDL raster file but then I feel I would've gone on and on about how I procrastinated and finished it while watching a baseball game.
